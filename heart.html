@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>چسب زدن به قلب شکسته</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            direction: rtl;
+            background: linear-gradient(135deg, #090135 0%, #111111 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            background: linear-gradient(135deg, #181818 0%, #090135 100%);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(255, 0, 100, 0.1);
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        h1 {
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .scene {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 30px auto;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 150px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.8s ease;
+        }
+        
+        .bandage {
+            position: absolute;
+            font-size: 100px;
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s ease;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+        }
+        
+        .crack {
+            position: absolute;
+            font-size: 150px;
+            color: #ff4b4b;
+            z-index: 5;
+            opacity: 0.7;
+        }
+        
+        .healed-heart {
+            position: absolute;
+            font-size: 150px;
+            opacity: 0;
+            transform: scale(0.5);
+            z-index: 6;
+        }
+        
+        .controls {
+            margin-top: 40px;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #FF416C, #FF4B2B);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(255, 65, 108, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 65, 108, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        
+        .message {
+            margin-top: 30px;
+            color: #fff;
+            line-height: 1.8;
+            font-size: 1.2rem;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-right: 3px solid #FF416C;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+        
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Animations */
+        @keyframes beat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shine {
+            0% { left: -50%; }
+            100% { left: 150%; }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 650px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .scene {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .heart, .crack, .healed-heart {
+                font-size: 130px;
+            }
+            
+            .bandage {
+                font-size: 80px;
+            }
+            
+            button {
+                padding: 16px 40px;
+                font-size: 16px;
+            }
+            
+            .message {
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .scene {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .heart, .crack, .healed-heart {
+                font-size: 100px;
+            }
+            
+            .bandage {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 ترمیم قلب‌های شکسته 🏥</h1>
+        
+        <div class="scene">
+            <div class="heart" id="brokenHeart">☺️</div>
+            <div class="crack" id="crack">💔</div>
+            <div class="bandage" id="bandage">🩹</div>
+            <div class="healed-heart" id="healedHeart">❤️</div>
+        </div>
+        
+        <div class="controls">
+            <button id="applyBandage">چسب بزن</button>
+        </div>
+        
+        <div class="message" id="message">
+            رفیق، هروقت قلبت شکست، من اینجام تا درستش کنم. بیا پیش خودم... ❤️‍🩹
+        </div>
+    </div>
+
+    <script>
+        const brokenHeart = document.getElementById('brokenHeart');
+        const bandage = document.getElementById('bandage');
+        const healedHeart = document.getElementById('healedHeart');
+        const crack = document.getElementById('crack');
+        const applyBandageBtn = document.getElementById('applyBandage');
+        const message = document.getElementById('message');
+        
+        let isHealed = false;
+        
+        function applyBandage() {
+            if (isHealed) return;
+            
+            isHealed = true;
+            applyBandageBtn.disabled = true;
+            applyBandageBtn.style.opacity = '0.7';
+            applyBandageBtn.style.cursor = 'default';
+            
+            // مرحله 1: چسب نشان داده شود
+            bandage.style.opacity = '1';
+            bandage.style.transform = 'scale(1) rotate(45deg)';
+            
+            // مرحله 2: قلب شکسته کمی محو شود
+            setTimeout(() => {
+                brokenHeart.style.opacity = '0.3';
+                crack.style.opacity = '0.3';
+                
+                // مرحله 3: چسب محو شده و قلب ترمیم شده نشان داده شود
+                setTimeout(() => {
+                    bandage.style.opacity = '0';
+                    bandage.style.transform = 'scale(0.5) rotate(90deg)';
+                    
+                    // مرحله 4: قلب ترمیم شده ظاهر شود
+                    setTimeout(() => {
+                        healedHeart.style.opacity = '1';
+                        healedHeart.style.transform = 'scale(1)';
+                        crack.style.opacity = '0';
+                        brokenHeart.style.opacity = '0';
+                        
+                        // افزودن انیمیشن ضربان
+                        healedHeart.style.animation = 'beat 1s infinite';
+                        
+                        // نمایش پیام با انیمیشن
+                        setTimeout(() => {
+                            message.classList.add('show');
+                            
+                            // تغییر متن دکمه
+                            setTimeout(() => {
+                                applyBandageBtn.textContent = 'قلبت ترمیم شد❤️';
+                                applyBandageBtn.style.background = 'linear-gradient(45deg, #4CAF50, #2E7D32)';
+                                applyBandageBtn.style.boxShadow = '0 5px 15px rgba(76, 175, 80, 0.3)';
+                            }, 500);
+                            
+                        }, 300);
+                        
+                    }, 500);
+                    
+                }, 1000);
+                
+            }, 800);
+        }
+        
+        // کلیک روی دکمه
+        applyBandageBtn.addEventListener('click', applyBandage);
+        
+        // کلیک روی قلب (برای راحتی کاربر)
+        brokenHeart.addEventListener('click', applyBandage);
+        crack.addEventListener('click', applyBandage);
+        
+        // کلیک روی صفحه (فضای خالی)
+        document.addEventListener('click', function(e) {
+            if (e.target === document.body || e.target === document.querySelector('.container')) {
+                if (!isHealed) {
+                    applyBandage();
+                }
+            }
+        });
+        
+        // کلید اسپیس برای راحتی
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space' && !isHealed) {
+                e.preventDefault();
+                applyBandage();
+            }
+        });
+        
+        // انیمیشن ضربان قلب شکسته
+        brokenHeart.style.animation = 'pulse 1.5s infinite alternate';
+    </script>
+</body>
+</html>
